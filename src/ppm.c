@@ -35,11 +35,17 @@ void _ppm_read(const char *filename){
     fscanf(img_file, " %u ", &max_color);
 
     // print the whole header
-    printf("File: %s\nSize: %lumb, Type: %s, Width: %u, Height: %u\n", filename, (size/1024)/1024, type, width, height);
+    printf("File: %s\nSize: %lumb, Type: %s, Width: %u, Height: %u\n", filename, size/1048576, type, width, height);
 
-    // now read the image body
-    // TODO
-
+    // now read the image pixels
+    unsigned char r, g, b;
+    //Pixel px;
+    for (int i = 0; i < height; i++){
+        for (int j = 0; j < width; j++){
+            fscanf(img_file, " %c%c%c ", &r, &g, &b);
+        }
+    }
+    
     fclose(img_file);
 }
 
