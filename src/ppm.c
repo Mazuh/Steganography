@@ -76,4 +76,8 @@ void _ppm_write_with_secret(const char *message){
     // bye :c
     fclose(img_file);
 
+    printf("Output file: ");
+    printf(PPM_DEFAULT_ENCODED_FILENAME);
+    printf("\n");
+
 }

@@ -1,3 +1,7 @@
+# CUSTOM BEGIN
+encoded_images/
+# CUSTOM END
+
 # Prerequisites
 *.d
 
