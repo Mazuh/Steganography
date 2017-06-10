@@ -38,14 +38,25 @@ void _ppm_read(const char *filename){
     printf("File: %s\nSize: %lumb, Type: %s, Width: %u, Height: %u\n", filename, size/1048576, type, width, height);
 
     // now read the image pixels
-    unsigned char r, g, b;
-    //Pixel px;
-    for (int i = 0; i < height; i++){
-        for (int j = 0; j < width; j++){
+    //Pixel pixel_map[1800][1800];
+    Pixel pixel;
+    char r, g, b;
+
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
             fscanf(img_file, " %c%c%c ", &r, &g, &b);
+            pixel.red = (unsigned char) r;
+            pixel.green = (unsigned char) g;
+            pixel.blue = (unsigned char) b;
+            //pixel_map[i][j] = pixel;
         }
     }
-    
+
+    //pixel = pixel_map[0][0];
+    // first: 129 148 178
+    // last: 69 69 67
+    printf(" %u %u %u\n", pixel.red, pixel.green, pixel.blue);
+
     fclose(img_file);
 }
 

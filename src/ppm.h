@@ -13,22 +13,20 @@
  * @brief Each pixel of a ppm image
  */
 typedef struct Pixel_struct{
-    unsigned char RED;
-    unsigned char GREEN;
-    unsigned char BLUE;
+    unsigned char red;
+    unsigned char green;
+    unsigned char blue;
 } Pixel;
 
 /**
  * @brief A ppm image file
  */
 typedef struct PPM_struct{
-	FILE *file; /* whole image file representation */
     unsigned long size; /* in bytes */
     unsigned int width; /* pixel amounts per line of content */
     unsigned int height; /* pixel amounts per column */
     unsigned char max_color; /* max color value */
-    unsigned char max_significant_bits; /* maximum amount of free significant bits */
-    Pixel pixel_map[4294967295]; /* image content */
+    Pixel pixel_map[10000][10000]; /* image content */
 } PPM;
 
 /**
