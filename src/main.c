@@ -7,6 +7,6 @@
 #include "ppm.h"
 
 int main(){
-    _ppm_read("./default_assets/imd.ppm");
+    ppm_read("./default_assets/imd.ppm");
     return 0;
 }
