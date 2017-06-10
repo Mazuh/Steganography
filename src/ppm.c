@@ -24,7 +24,7 @@ PPM *ppm_read(const char *filename){
 
     if (!(type[0] == 'P' || type[1] == '6')){
         printf("Invalid file.\n");
-        return;
+        return NULL;
     }
 
     // read image dimensions
