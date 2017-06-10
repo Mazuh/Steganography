@@ -6,53 +6,74 @@
 #include <stdio.h>
 #include "ppm.h"
 
-PPM image;
+PPM _image;
 
-PPM *ppm_read(const char *filename){
+void ppm_encode(const char *filename, const char *message){
+    _ppm_read_from_file(filename);
+    _ppm_write_with_secret(message);
+}
+
+void _ppm_read_from_file(const char *filename){
 
     // open it!
     FILE *img_file = fopen(filename, "rb");
 
     // seek file size in bytes
     fseek(img_file, 0, SEEK_END);
-    image.size = ftell(img_file);
+    _image.size = ftell(img_file);
     fseek(img_file, 0, SEEK_SET);
 
     // confirm type
     char type[3];
     fscanf(img_file, " %s ", type);
 
-    if (!(type[0] == 'P' || type[1] == '6')){
-        printf("Invalid file.\n");
-        return NULL;
-    }
-
     // read image dimensions
-    fscanf(img_file, " %u %u ", &image.width, &image.height);
+    fscanf(img_file, " %u %u ", &_image.width, &_image.height);
 
     // read max color value
-    fscanf(img_file, " %hhu ", &image.max_color);
+    fscanf(img_file, " %hhu ", &_image.max_color);
 
     // print the whole header
-    printf("File: %s\nSize: %lumb, Type: %s, Width: %u, Height: %u\n", filename, image.size/1048576, type, image.width, image.height);
+    printf("File: %s\nSize: %lumb, Type: %s, Width: %u, Height: %u\n", filename, _image.size/1048576, type, _image.width, _image.height);
 
     // now read the image pixels
     Pixel pixel;
-    char r, g, b;
-
-    for (int i = 0; i < image.width; i++){
-        for (int j = 0; j < image.height; j++){
-            fscanf(img_file, " %c%c%c ", &r, &g, &b);
-            pixel.red = (unsigned char) r;
-            pixel.green = (unsigned char) g;
-            pixel.blue = (unsigned char) b;
-            image.pixel_map[i][j] = pixel;
+    for (int i = 0; i < _image.height; i++){
+        for (int j = 0; j < _image.width; j++){
+            pixel.red = (unsigned char) fgetc(img_file);
+            pixel.green = (unsigned char) fgetc(img_file);
+            pixel.blue = (unsigned char) fgetc(img_file);
+            _image.pixel_map[i][j] = pixel;
         }
     }
 
     // bye
     fclose(img_file);
-
-    return &image;
 }
 
+void _ppm_write_with_secret(const char *message){
+
+    // hello!
+    FILE *img_file = fopen(PPM_DEFAULT_ENCODED_FILENAME, "wb");
+
+    // print header
+    fputs(PPM_TYPE_BIN, img_file);
+    fputs("\n", img_file);
+    fprintf(img_file, "%u %u\n", _image.width, _image.height);
+    fprintf(img_file, "%hhu\n", _image.max_color);
+
+    // print image content
+    Pixel pixel;
+    for (int i = 0; i < _image.height; i++){
+        for (int j = 0; j < _image.width; j++){
+            pixel = _image.pixel_map[i][j];
+            fputc(pixel.red, img_file);
+            fputc(pixel.green, img_file);
+            fputc(pixel.blue, img_file);
+        }
+    }
+
+    // bye :c
+    fclose(img_file);
+
+}

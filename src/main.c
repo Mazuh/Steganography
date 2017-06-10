@@ -7,6 +7,6 @@
 #include "ppm.h"
 
 int main(){
-    ppm_read("./default_assets/imd.ppm");
+    ppm_encode("./default_assets/imd.ppm", "This project is LEGEN...\nWait for it...\nDARY! Legendary!!!");
     return 0;
 }

@@ -6,6 +6,7 @@
 #ifndef PPM_H
 #define PPM_H
 
+#define PPM_DEFAULT_ENCODED_FILENAME "./encoded_images/suspicious_portable_pixmap.ppm"
 #define PPM_TYPE_ASCII "P3"
 #define PPM_TYPE_BIN "P6"
 
@@ -30,8 +31,18 @@ typedef struct PPM_struct{
 } PPM;
 
 /**
- * @brief Reads an image pointed to by filename
+ * @brief Gets a ppm image file and writes a message in it.
  */
-PPM *ppm_read(const char *filename);
+void ppm_encode(const char *filename, const char *message);
+
+/**
+ * @brief (Private) Reads the original image file.
+ */
+void _ppm_read_from_file(const char *filename);
+
+/**
+ * @brief (Private) Persists the image and also writes a secret message.
+ */
+void _ppm_write_with_secret(const char *message);
 
 #endif
