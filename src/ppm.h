@@ -6,6 +6,8 @@
 #ifndef PPM_H
 #define PPM_H
 
+#define END_OF_SECRET 0x1b
+
 #define PPM_DEFAULT_ENCODED_FILENAME "./encoded_images/suspicious_portable_pixmap.ppm"
 #define PPM_TYPE_ASCII "P3"
 #define PPM_TYPE_BIN "P6"
@@ -34,6 +36,11 @@ typedef struct PPM_struct{
  * @brief Gets a ppm image file and writes a message in it.
  */
 void ppm_encode(const char *filename, const char *message);
+
+/**
+ * @brief Gets the bit of a character sample, based on its position (from left to right, 0~7).
+ */
+unsigned char seek_char_bit(unsigned char *sample, int bit_position);
 
 /**
  * @brief Gets the less significant bit of a color sample.

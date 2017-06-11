@@ -4,8 +4,11 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+
 #include "ppm.h"
 
+const unsigned char BIT_SEEK_MASK[8] = {0x80, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1};
 PPM _image;
 
 void ppm_encode(const char *filename, const char *message){
@@ -13,6 +16,10 @@ void ppm_encode(const char *filename, const char *message){
     _ppm_write_with_secret(message);
 }
 
+unsigned char seek_char_bit(unsigned char *sample, int bit_position){
+    return (*sample & BIT_SEEK_MASK[bit_position]) == BIT_SEEK_MASK[bit_position];
+}
+/*
 unsigned char color_lsb(unsigned char *color_sample){
     return (*color_sample & 0x1) == 0x1;
 }
@@ -20,7 +27,7 @@ unsigned char color_lsb(unsigned char *color_sample){
 void set_color_lsb(unsigned char *color_sample, unsigned char bit){
     *color_sample = (bit) ? (*color_sample | 0x1) : (*color_sample & 0xfe);
 }
-
+*/
 void _ppm_read_from_file(const char *filename){
 
     // open it!
@@ -60,7 +67,7 @@ void _ppm_read_from_file(const char *filename){
 }
 
 void _ppm_write_with_secret(const char *message){
-
+    
     // hello!
     FILE *img_file = fopen(PPM_DEFAULT_ENCODED_FILENAME, "wb");
 
@@ -70,17 +77,46 @@ void _ppm_write_with_secret(const char *message){
     fprintf(img_file, "%u %u\n", _image.width, _image.height);
     fprintf(img_file, "%hhu\n", _image.max_color);
 
+    // serialize bits
+    int message_len = strlen(message);
+    unsigned char serialized_message[500];
+    int hidden_bytes = 0;
+    int serialized_message_len = message_len * 8;
+
+    for (int i = 0; i < serialized_message_len; i += 8){
+        for (int j = 0; j < 8; j++){
+            serialized_message[i+j] = seek_char_bit(&message[hidden_bytes], j);
+        }
+        hidden_bytes++;
+    }
+
+    //serialized_message[serialized_message_len++] = END_OF_SECRET;
+
+/*
     // print image content
     Pixel pixel;
+    unsigned char pixel_colors[3];
+    int hidden_bits = 0;
+
     for (int i = 0; i < _image.height; i++){
         for (int j = 0; j < _image.width; j++){
             pixel = _image.pixel_map[i][j];
-            fputc(pixel.red, img_file);
-            fputc(pixel.green, img_file);
-            fputc(pixel.blue, img_file);
+            pixel_colors = {pixel.red, pixel.green, pixel.blue};
+
+            for (int k = 0; k < 3; k++){
+                if (typed_characters < serialized_message_len)
+                    set_color_lsb(&pixel_colors[k], 1);
+                else if (typed_characters == serialized_message_len)
+                    set_color_lsb(&pixel_colors[k], 1);
+                else
+                    set_color_lsb(&pixel_colors[k], 1);
+                
+                typed_characters++;
+                fputc(pixel_colors[k], img_file);
+            }
         }
     }
-
+*/
     // bye :c
     fclose(img_file);
 
