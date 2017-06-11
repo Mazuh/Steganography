@@ -13,6 +13,14 @@ void ppm_encode(const char *filename, const char *message){
     _ppm_write_with_secret(message);
 }
 
+unsigned char color_lsb(unsigned char *color_sample){
+    return (*color_sample & 0x1) == 0x1;
+}
+
+void set_color_lsb(unsigned char *color_sample, unsigned char bit){
+    *color_sample = (bit) ? (*color_sample | 0x1) : (*color_sample & 0xfe);
+}
+
 void _ppm_read_from_file(const char *filename){
 
     // open it!

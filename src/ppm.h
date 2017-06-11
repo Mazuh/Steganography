@@ -36,6 +36,16 @@ typedef struct PPM_struct{
 void ppm_encode(const char *filename, const char *message);
 
 /**
+ * @brief Gets the less significant bit of a color sample.
+ */
+unsigned char color_lsb(unsigned char *color_sample);
+
+/**
+ * @brief Changes the less significant bit of a color sample.
+ */
+void set_color_lsb(unsigned char *color_sample, unsigned char bit);
+
+/**
  * @brief (Private) Reads the original image file.
  */
 void _ppm_read_from_file(const char *filename);
