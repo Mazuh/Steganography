@@ -9,6 +9,8 @@
 #define END_OF_SECRET 0x1b
 
 #define PPM_DEFAULT_ENCODED_FILENAME "./encoded_images/suspicious_portable_pixmap.ppm"
+#define PPM_DEFAULT_ASSET_FILENAME "./default_assets/imd.ppm"
+
 #define PPM_TYPE_ASCII "P3"
 #define PPM_TYPE_BIN "P6"
 
@@ -36,6 +38,11 @@ typedef struct PPM_struct{
  * @brief Gets a ppm image file and writes a message in it.
  */
 void ppm_encode(const char *filename, const char *message);
+
+/**
+ * @brief Gets a ppm image file with a secret and discover its message.
+ */
+char *ppm_decode(const char *filename);
 
 /**
  * @brief Gets the bit of a character sample, based on its position (from left to right, 0~7).

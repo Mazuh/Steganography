@@ -7,6 +7,7 @@
 #include "ppm.h"
 
 int main(){
-    ppm_encode("./default_assets/imd.ppm", "This project is LEGEN... Wait for it... DARY! Legendary!!!");
+    ppm_encode(PPM_DEFAULT_ASSET_FILENAME, "This project is LEGEN... Wait for it... DARY! Legendary!!!");
+    //printf("Discovered message: %s\n", ppm.decode(PPM_DEFAULT_ENCODED_FILENAME));
     return 0;
 }
