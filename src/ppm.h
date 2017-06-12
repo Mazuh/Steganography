@@ -62,7 +62,7 @@ void set_color_lsb(unsigned char *color_sample, unsigned char bit);
 /**
  * @brief (Private) Reads the original image file.
  */
-void _ppm_read_from_file(const char *filename);
+void _ppm_read_from_file(const char *filename, int secret);
 
 /**
  * @brief (Private) Persists the image and also writes a secret message.

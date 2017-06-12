@@ -10,10 +10,42 @@
 
 const unsigned char BIT_SEEK_MASK[8] = {0x80, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2, 0x1};
 PPM _image;
+unsigned char _found_lsb[500];
+char _message[500];
 
 void ppm_encode(const char *filename, const char *message){
-    _ppm_read_from_file(filename);
+    _ppm_read_from_file(filename, 0);
     _ppm_write_with_secret(message);
+}
+
+char *ppm_decode(const char *filename){
+    _ppm_read_from_file(filename, 1);
+
+    int message_len = 0;
+    unsigned char found_char;
+
+    for (int i = 0; i < 500; i += 8){
+        found_char = (
+            _found_lsb[i] << 7
+            | _found_lsb[i+1] << 6
+            | _found_lsb[i+2] << 5
+            | _found_lsb[i+3] << 4
+            | _found_lsb[i+4] << 3
+            | _found_lsb[i+5] << 2
+            | _found_lsb[i+6] << 1
+            | _found_lsb[i+7]
+        );
+        
+        if (found_char == END_OF_SECRET){
+            _message[message_len++] = '\0';
+            break;
+        } else{
+            _message[message_len++] = (char) found_char;
+        }
+
+    }
+
+    return _message;
 }
 
 unsigned char seek_char_bit(unsigned char *sample, int bit_position){
@@ -28,7 +60,7 @@ void set_color_lsb(unsigned char *color_sample, unsigned char bit){
     *color_sample = (bit) ? (*color_sample | 0x1) : (*color_sample & 0xfe);
 }
 
-void _ppm_read_from_file(const char *filename){
+void _ppm_read_from_file(const char *filename, int secret){
 
     // open it!
     FILE *img_file = fopen(filename, "rb");
@@ -53,12 +85,19 @@ void _ppm_read_from_file(const char *filename){
 
     // now read the image pixels
     Pixel pixel;
+    int found_lsb_len = 0;
+
     for (int i = 0; i < _image.height; i++){
         for (int j = 0; j < _image.width; j++){
             pixel.red = (unsigned char) fgetc(img_file);
             pixel.green = (unsigned char) fgetc(img_file);
             pixel.blue = (unsigned char) fgetc(img_file);
             _image.pixel_map[i][j] = pixel;
+            if (found_lsb_len < 498 && secret){
+                _found_lsb[found_lsb_len++] = color_lsb(&pixel.red);
+                _found_lsb[found_lsb_len++] = color_lsb(&pixel.green);
+                _found_lsb[found_lsb_len++] = color_lsb(&pixel.blue);
+            }
         }
     }
 
@@ -114,7 +153,6 @@ void _ppm_write_with_secret(const char *message){
                     set_color_lsb(&pixel_colors[k], serialized_message[hidden_bits]);
                 else
                     set_color_lsb(&pixel_colors[k], 0);
-                
                 fputc(pixel_colors[k], img_file);
                 hidden_bits++;
             }
