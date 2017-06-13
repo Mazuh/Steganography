@@ -22,7 +22,9 @@ typedef struct PPM_struct{
     unsigned int width; /* pixel amounts per line of content */
     unsigned int height; /* pixel amounts per column */
     unsigned char max_color; /* max color value */
-    Pixel pixel_map[10000][10000]; /* image content */
+    unsigned char *found_lsb; /* all less significant bits collected from pixels */
+    unsigned int found_lsb_len;
+    Pixel **pixel_map; /* image content */
 } PPM;
 
 /**
@@ -38,11 +40,11 @@ char *ppm_decode(const char *filename);
 /**
  * @brief (Private) Reads the original image file.
  */
-void _ppm_read_from_file(const char *filename, int secret);
+PPM *_ppm_read_from_file(const char *filename, int secret);
 
 /**
  * @brief (Private) Persists the image and also writes a secret message.
  */
-void _ppm_write_with_secret(const char *message);
+void _ppm_write_with_secret(PPM *image, const char *message);
 
 #endif

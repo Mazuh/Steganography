@@ -9,10 +9,10 @@
 
 /* Portable PixMap */
 int test_ppm(){
-    
+
     printf("\n>>> PPM: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
     ppm_encode(PPM_DEFAULT_ASSET_FILENAME, "This project is LEGEN... Wait for it... DARY! Legendary!!!");
-    
+
     printf("\n>>> PPM: READING SECRET INSIDE THE CREATED IMAGE...\n");
     printf("Discovered message:\n%s\n", ppm_decode(PPM_DEFAULT_ENCODED_FILENAME));
 
@@ -34,6 +34,6 @@ int test_bmp(){
 }
 
 int main(){
-    //return test_ppm();
-    return test_bmp();
+    return test_ppm();
+    //return test_bmp();
 }
