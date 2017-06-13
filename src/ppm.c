@@ -8,6 +8,9 @@
 
 #include "ppm.h"
 
+const char PPM_DEFAULT_ASSET_FILENAME[] = "./default_assets/imd.ppm";
+const char PPM_DEFAULT_ENCODED_FILENAME[] = "./encoded_images/suspicious_portable_pixmap.ppm";
+
 PPM _image;
 unsigned char _found_lsb[500];
 char _message[500];

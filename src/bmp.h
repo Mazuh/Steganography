@@ -3,20 +3,19 @@
  * @brief Header for Bitmap (.bmp) image handler
  * @see http://www.digicamsoft.com/bmp/bmp.html
  */
-
 #ifndef BMP_H
 #define BMP_H
 
 #include "pixel.h"
 
-#define BMP_DEFAULT_ENCODED_FILENAME "./encoded_images/suspicious_bitmap.bmp"
-#define BMP_DEFAULT_ASSET_FILENAME "./default_assets/imd.bmp"
+extern const char BMP_DEFAULT_ASSET_FILENAME[];
+extern const char BMP_DEFAULT_ENCODED_FILENAME[];
 
 /**
  * @brief A bmp image file
  */
 typedef struct BMP_struct{
-    // TODO
+    unsigned long size;
 } BMP;
 
 /**

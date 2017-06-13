@@ -8,8 +8,8 @@
 
 #include "pixel.h"
 
-#define PPM_DEFAULT_ENCODED_FILENAME "./encoded_images/suspicious_portable_pixmap.ppm"
-#define PPM_DEFAULT_ASSET_FILENAME "./default_assets/imd.ppm"
+extern const char PPM_DEFAULT_ASSET_FILENAME[];
+extern const char PPM_DEFAULT_ENCODED_FILENAME[];
 
 #define PPM_TYPE_ASCII "P3"
 #define PPM_TYPE_BIN "P6"

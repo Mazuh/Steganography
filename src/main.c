@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "ppm.h"
+#include "bmp.h"
 
 /* Portable PixMap */
 int test_ppm(){
@@ -21,8 +22,10 @@ int test_ppm(){
 /* Bitmap */
 int test_bmp(){
     
-    printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
-    //ppm_encode(PPM_DEFAULT_ASSET_FILENAME, "This project is LEGEN... Wait for it... DARY! Legendary!!!");
+    _bmp_read_from_file("./default_assets/imd.bmp", 0);
+
+    //printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
+    //bmp_encode("BMP_DEFAULT_ASSET_FILENAME", "I am not in danger, Skyler. I AM the danger.");
 
     //printf("\n>>> BMP: READING SECRET INSIDE THE CREATED IMAGE...\n");
     //printf("Discovered message: %s\n", ppm_decode(PPM_DEFAULT_ENCODED_FILENAME));
@@ -31,5 +34,6 @@ int test_bmp(){
 }
 
 int main(){
+    //return test_ppm();
     return test_bmp();
 }

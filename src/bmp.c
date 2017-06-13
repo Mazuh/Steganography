@@ -8,11 +8,10 @@
 
 #include "bmp.h"
 
-BMP _image;
+const char BMP_DEFAULT_ASSET_FILENAME[] = "./default_assets/imd.bmp";
+const char BMP_DEFAULT_ENCODED_FILENAME[] = "./encoded_images/suspicious_bitmap.bmp";
 
-void bmp_encode(const char *filename, const char *message){
-    _bmp_read_from_file(filename, 0);
-}
+BMP _image;
 
 void _bmp_read_from_file(const char *filename, int secret){
 
@@ -20,6 +19,7 @@ void _bmp_read_from_file(const char *filename, int secret){
     FILE *img_file = fopen(filename, "rb");
 
     // TODO
+    printf("%s\n", filename);
 
     // bye
     fclose(img_file);

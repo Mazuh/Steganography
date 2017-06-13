@@ -2,6 +2,8 @@
  * @author Mazuh
  * @brief Header for pixel handler, common to almost every image handler
  */
+#ifndef PIXEL_H
+#define PIXEL_H
 
 extern const unsigned char END_OF_SECRET;
 extern const unsigned char BIT_SEEK_MASK[8];
@@ -29,3 +31,5 @@ unsigned char color_lsb(unsigned char *color_sample);
  * @brief Changes the less significant bit of a color sample.
  */
 void set_color_lsb(unsigned char *color_sample, unsigned char bit);
+
+#endif
