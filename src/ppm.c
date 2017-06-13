@@ -60,17 +60,12 @@ void _ppm_read_from_file(const char *filename, int secret){
     _image.size = ftell(img_file);
     fseek(img_file, 0, SEEK_SET);
 
-    // confirm type
+    // scanning header
     char type[3];
     fscanf(img_file, " %s ", type);
-
-    // read image dimensions
     fscanf(img_file, " %u %u ", &_image.width, &_image.height);
-
-    // read max color value
     fscanf(img_file, " %hhu ", &_image.max_color);
 
-    // print the whole header
     printf("File: %s\nSize: %lumb, Type: %s, Width: %u, Height: %u\n", filename, _image.size/1048576, type, _image.width, _image.height);
 
     // now read the image pixels
