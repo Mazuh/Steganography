@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "bmp.h"
 
@@ -14,8 +15,6 @@ const char BMP_DEFAULT_ENCODED_FILENAME[] = "./encoded_images/suspicious_bitmap.
 #define SIZE_INT 4
 #define SIZE_SHORT 2
 
-BMP _image;
-
 void _bmp_read_from_file(const char *filename, int secret){
 
     // open it!
@@ -23,58 +22,36 @@ void _bmp_read_from_file(const char *filename, int secret){
     printf("File: %s\n", filename);
 
     // scanning file header
-    char type[3];
-    unsigned int size;
-    unsigned int reserved;
-    unsigned int offset;
+    FileHeaderBMP *fheader = malloc(sizeof(FileHeaderBMP));
+    fheader->type[0] = fgetc(img_file);
+    fheader->type[1] = fgetc(img_file);
+    fheader->type[2] = '\0';
+    fread(&fheader->file_size, SIZE_INT, 1, img_file);
+    fread(&fheader->reserved,  SIZE_INT, 1, img_file);
+    fread(&fheader->offset,    SIZE_INT, 1, img_file);
 
-    type[0] = fgetc(img_file);
-    type[1] = fgetc(img_file);
-    type[2] = '\0';
-    fread(&size, SIZE_INT, 1, img_file);
-    fread(&reserved, SIZE_INT, 1, img_file);
-    fread(&offset, SIZE_INT, 1, img_file);
-
-    printf("Type: %s, Size: %u, Reserved: %u, Offset: %u\n", type, size, reserved, offset);
+    printf("Type: %s, Size: %u, Reserved: %u, Offset: %u\n", fheader->type, fheader->file_size, fheader->reserved, fheader->offset);
 
     // scanning image header
-    unsigned int header_size;
-    int width;
-    int height;
+    ImageHeaderBMP *iheader = malloc(sizeof(ImageHeaderBMP));
+    fread(&iheader->header_size,           SIZE_INT,   1, img_file);
+    fread(&iheader->width,                 SIZE_INT,   1, img_file);
+    fread(&iheader->height,                SIZE_INT,   1, img_file);
+    fread(&iheader->planes_qtt,            SIZE_SHORT, 1, img_file);
+    fread(&iheader->bits_per_pixel,        SIZE_SHORT, 1, img_file);
+    fread(&iheader->compression_type,      SIZE_INT,   1, img_file);
+    fread(&iheader->image_size,            SIZE_INT,   1, img_file);
+    fread(&iheader->horizontal_resolution, SIZE_INT,   1, img_file);
+    fread(&iheader->vertical_resolution,   SIZE_INT,   1, img_file);
+    fread(&iheader->colors_qtt,            SIZE_INT,   1, img_file);
+    fread(&iheader->important_colors_qtt,  SIZE_INT,   1, img_file);
 
-    unsigned short planes_qtt;
-    unsigned short bits_per_pixel;
-    unsigned int compression_type;
+    printf("Header size: %u, Width: %d, Height: %d\n", iheader->header_size, iheader->width, iheader->height);
+    printf("Color planes: %hu, Bits per pixel: %hu, Compression: %u\n", iheader->planes_qtt, iheader->bits_per_pixel, iheader->compression_type);
+    printf("Image size: %u, Horizontal resolution: %d, Vertical resolution: %d\n", iheader->image_size, iheader->horizontal_resolution, iheader->vertical_resolution);
+    printf("Colors: %u, Important colors: %u\n", iheader->colors_qtt, iheader->important_colors_qtt);
 
-    unsigned int image_size;
-    int horizontal_resolution;
-    int vertical_resolution;
-
-    unsigned int colors_qtt;
-    unsigned int important_colors_qtt;
-
-	fread(&header_size, SIZE_INT, 1, img_file);
-	fread(&width, SIZE_INT, 1, img_file);
-	fread(&height, SIZE_INT, 1, img_file);
-
-	fread(&planes_qtt, SIZE_SHORT, 1, img_file);
-	fread(&bits_per_pixel, SIZE_SHORT, 1, img_file);
-	fread(&compression_type, SIZE_INT, 1, img_file);
-	
-    fread(&image_size, SIZE_INT, 1, img_file);
-	fread(&horizontal_resolution, SIZE_INT, 1, img_file);
-	fread(&vertical_resolution, SIZE_INT, 1, img_file);
-
-	fread(&colors_qtt, SIZE_INT, 1, img_file);
-	fread(&important_colors_qtt, SIZE_INT, 1, img_file);
-
-    printf("Header size: %u, Width: %d, Height: %d\n", header_size, width, height);
-    printf("Color planes: %hu, Bits per pixel: %hu, Compression: %u\n", planes_qtt, bits_per_pixel, compression_type);
-    printf("Image size: %u, Horizontal resolution: %d, Vertical resolution: %d\n", image_size, horizontal_resolution, vertical_resolution);
-    printf("Colors: %u, Important colors: %u\n", colors_qtt, important_colors_qtt);
-
-    // scanning colors
-    // TODO
+    // ...
 
     // bye
     fclose(img_file);

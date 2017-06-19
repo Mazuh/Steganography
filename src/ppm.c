@@ -104,7 +104,7 @@ PPM* _ppm_read_from_file(const char *filename, int secret){
 }
 
 void _ppm_write_with_secret(PPM *image, const char *message){
-    
+
     // hello!
     FILE *img_file = fopen(PPM_DEFAULT_ENCODED_FILENAME, "wb");
 

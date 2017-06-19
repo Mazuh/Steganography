@@ -34,6 +34,6 @@ int test_bmp(){
 }
 
 int main(){
-    return test_ppm();
-    //return test_bmp();
+    //return test_ppm();
+    return test_bmp();
 }

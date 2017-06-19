@@ -11,12 +11,43 @@
 extern const char BMP_DEFAULT_ASSET_FILENAME[];
 extern const char BMP_DEFAULT_ENCODED_FILENAME[];
 
+
 /**
- * @brief A bmp image file
+ * @brief A bmp file header
+ */
+ typedef struct FileHeaderBMP_struct{
+    char type[3];
+    unsigned int file_size;
+    unsigned int reserved;
+    unsigned int offset;
+} FileHeaderBMP;
+
+/**
+ * @brief A bmp image header
+ */
+ typedef struct ImageHeaderBMP_struct{
+    unsigned int header_size;
+    int width;
+    int height;
+    unsigned short planes_qtt;
+    unsigned short bits_per_pixel;
+    unsigned int compression_type;
+    unsigned int image_size;
+    int horizontal_resolution;
+    int vertical_resolution;
+    unsigned int colors_qtt;
+    unsigned int important_colors_qtt;
+} ImageHeaderBMP;
+
+/**
+ * @brief A bmp image and its headers
  */
 typedef struct BMP_struct{
-    unsigned long size;
+    FileHeaderBMP *file_header;
+    ImageHeaderBMP *image_header;
+    Pixel **pixel_map;
 } BMP;
+
 
 /**
  * @brief Gets a bmp image file and writes a message in it.
