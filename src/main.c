@@ -22,7 +22,8 @@ int test_ppm(){
 /* Bitmap */
 int test_bmp(){
     
-    _bmp_read_from_file("./default_assets/imd.bmp", 0);
+    BMP *image = _bmp_read_from_file("./default_assets/perfumeadidas31.bmp");
+    _bmp_write_with_secret(image, "wadda");
 
     //printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
     //bmp_encode("BMP_DEFAULT_ASSET_FILENAME", "I am not in danger, Skyler. I AM the danger.");

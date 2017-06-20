@@ -27,14 +27,14 @@ extern const char BMP_DEFAULT_ENCODED_FILENAME[];
  */
  typedef struct ImageHeaderBMP_struct{
     unsigned int header_size;
-    int width;
-    int height;
+    unsigned int width;
+    unsigned int height;
     unsigned short planes_qtt;
     unsigned short bits_per_pixel;
     unsigned int compression_type;
     unsigned int image_size;
-    int horizontal_resolution;
-    int vertical_resolution;
+    unsigned int horizontal_resolution;
+    unsigned int vertical_resolution;
     unsigned int colors_qtt;
     unsigned int important_colors_qtt;
 } ImageHeaderBMP;
@@ -46,6 +46,8 @@ typedef struct BMP_struct{
     FileHeaderBMP *file_header;
     ImageHeaderBMP *image_header;
     Pixel **pixel_map;
+    unsigned char *found_lsb; /* all less significant bits collected from pixels */
+    unsigned long found_lsb_len;
 } BMP;
 
 
@@ -62,11 +64,11 @@ char *bmp_decode(const char *filename);
 /**
  * @brief (Private) Reads the original image file.
  */
-void _bmp_read_from_file(const char *filename, int secret);
+BMP* _bmp_read_from_file(const char *filename);
 
 /**
  * @brief (Private) Persists the image and also writes a secret message.
  */
-void _bmp_write_with_secret(const char *message);
+void _bmp_write_with_secret(BMP *image, const char *message);
 
 #endif
