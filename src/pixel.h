@@ -6,6 +6,8 @@
 #define PIXEL_H
 
 extern const unsigned char END_OF_SECRET;
+extern const unsigned char SERIALIZED_END_OF_SECRET[8];
+
 extern const unsigned char BIT_SEEK_MASK[8];
 
 /**
@@ -23,12 +25,12 @@ typedef struct Pixel_struct{
 unsigned char seek_char_bit(unsigned char *sample, int bit_position);
 
 /**
- * @brief Gets the less significant bit of a color sample.
+ * @brief Gets the least significant bit of a color sample.
  */
 unsigned char color_lsb(unsigned char *color_sample);
 
 /**
- * @brief Changes the less significant bit of a color sample.
+ * @brief Changes the least significant bit of a color sample.
  */
 void set_color_lsb(unsigned char *color_sample, unsigned char bit);
 

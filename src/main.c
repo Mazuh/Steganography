@@ -11,10 +11,10 @@
 int test_ppm(){
 
     printf("\n>>> PPM: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
-    ppm_encode(PPM_DEFAULT_ASSET_FILENAME, "This project is LEGEN... Wait for it... DARY! Legendary!!!");
+    ppm_encode(PPM_DEFAULT_ASSET_FILENAME, "This project is LEGEN...\nWait for it...\nDARY!\nLegendary!!!");
 
     printf("\n>>> PPM: READING SECRET INSIDE THE CREATED IMAGE...\n");
-    printf("Discovered message:\n%s\n", ppm_decode(PPM_DEFAULT_ENCODED_FILENAME));
+    printf("Discovered message:\n\n%s\n", ppm_decode(PPM_DEFAULT_ENCODED_FILENAME));
 
     return 0;
 }
@@ -22,14 +22,11 @@ int test_ppm(){
 /* Bitmap */
 int test_bmp(){
     
-    BMP *image = _bmp_read_from_file("./default_assets/perfumeadidas31.bmp");
-    _bmp_write_with_secret(image, "wadda");
+    printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");   
+    bmp_encode(BMP_DEFAULT_ASSET_FILENAME, "You clearly don't know who you're talking to, so let me clue you in.\nI am not in danger, Skyler. I AM THE DANGER.\nA guy opens his door and gets shot and you think that of me?\nNo.\nI am... the one who knocks!");
 
-    //printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
-    //bmp_encode("BMP_DEFAULT_ASSET_FILENAME", "I am not in danger, Skyler. I AM the danger.");
-
-    //printf("\n>>> BMP: READING SECRET INSIDE THE CREATED IMAGE...\n");
-    //printf("Discovered message: %s\n", ppm_decode(PPM_DEFAULT_ENCODED_FILENAME));
+    printf("\n>>> BMP: READING SECRET INSIDE THE CREATED IMAGE...\n");
+    printf("Discovered message:\n\n%s\n", bmp_decode(BMP_DEFAULT_ENCODED_FILENAME));
 
     return 0;
 }

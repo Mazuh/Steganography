@@ -46,7 +46,7 @@ typedef struct BMP_struct{
     FileHeaderBMP *file_header;
     ImageHeaderBMP *image_header;
     Pixel **pixel_map;
-    unsigned char *found_lsb; /* all less significant bits collected from pixels */
+    unsigned char *found_lsb; /* all least significant bits collected from pixels */
     unsigned long found_lsb_len;
 } BMP;
 
@@ -64,7 +64,7 @@ char *bmp_decode(const char *filename);
 /**
  * @brief (Private) Reads the original image file.
  */
-BMP* _bmp_read_from_file(const char *filename);
+BMP *_bmp_read_from_file(const char *filename);
 
 /**
  * @brief (Private) Persists the image and also writes a secret message.

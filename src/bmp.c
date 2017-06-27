@@ -15,7 +15,47 @@ const char BMP_DEFAULT_ENCODED_FILENAME[] = "./encoded_images/suspicious_bitmap.
 #define SIZE_INT 4
 #define SIZE_SHORT 2
 
-BMP* _bmp_read_from_file(const char *filename){
+void bmp_encode(const char *filename, const char *message){    
+    BMP *image = _bmp_read_from_file(filename);
+    _bmp_write_with_secret(image, message);
+    free(image);
+}
+
+char *bmp_decode(const char *filename){
+    BMP *image = _bmp_read_from_file(filename);
+
+    int message_len = 0;
+    unsigned char found_char;
+
+    char *message = malloc(1);
+
+    for (int i = 0;; i += 8){
+        found_char = (
+            image->found_lsb[i] << 7
+            | image->found_lsb[i+1] << 6
+            | image->found_lsb[i+2] << 5
+            | image->found_lsb[i+3] << 4
+            | image->found_lsb[i+4] << 3
+            | image->found_lsb[i+5] << 2
+            | image->found_lsb[i+6] << 1
+            | image->found_lsb[i+7]
+        );
+
+        if (found_char == END_OF_SECRET){
+            message[message_len++] = '\0';
+            break;
+        } else{
+            message[message_len++] = (char) found_char;
+            message = realloc(message, message_len+1);
+        }
+
+    }
+
+    return message;
+}
+
+
+BMP *_bmp_read_from_file(const char *filename){
 
     // open it!
     BMP *image = malloc(sizeof(BMP));
@@ -62,8 +102,8 @@ BMP* _bmp_read_from_file(const char *filename){
     // scanning image pixels
     Pixel pixel;
     image->pixel_map = malloc(iheader->height * sizeof(Pixel*));
-    //image->found_lsb = malloc(0);
-    //image->found_lsb_len = 0;
+    image->found_lsb = malloc(0);
+    image->found_lsb_len = 0;
 
     for (int i = 0; i < iheader->height; i++){
         image->pixel_map[i] = (Pixel*) malloc(iheader->width*sizeof(Pixel));
@@ -75,10 +115,10 @@ BMP* _bmp_read_from_file(const char *filename){
             pixel.blue = (unsigned char) fgetc(img_file);
             image->pixel_map[i][j] = pixel;
 
-            //image->found_lsb = realloc(image->found_lsb, image->found_lsb_len+3);
-            //image->found_lsb[image->found_lsb_len++] = color_lsb(&pixel.red);
-            //image->found_lsb[image->found_lsb_len++] = color_lsb(&pixel.green);
-            //image->found_lsb[image->found_lsb_len++] = color_lsb(&pixel.blue);
+            image->found_lsb = realloc(image->found_lsb, image->found_lsb_len+3);
+            image->found_lsb[image->found_lsb_len++] = color_lsb(&pixel.red);
+            image->found_lsb[image->found_lsb_len++] = color_lsb(&pixel.green);
+            image->found_lsb[image->found_lsb_len++] = color_lsb(&pixel.blue);
 
         }
     }
@@ -87,6 +127,7 @@ BMP* _bmp_read_from_file(const char *filename){
     fclose(img_file);
     return image;
 }
+
 
 void _bmp_write_with_secret(BMP *image, const char *message){
     // hello!
@@ -116,7 +157,6 @@ void _bmp_write_with_secret(BMP *image, const char *message){
     fwrite(&iheader->colors_qtt,            SIZE_INT,   1, img_file);
     fwrite(&iheader->important_colors_qtt,  SIZE_INT,   1, img_file);
 
-/*
     // serialize bits
     int message_len = strlen(message);
     unsigned char *serialized_message = malloc(strlen(message)*8 + 8);
@@ -130,18 +170,18 @@ void _bmp_write_with_secret(BMP *image, const char *message){
         hidden_bytes++;
     }
 
-    // serialize ESC character, saying that the message has ended
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-*/
+    // serialize a character saying that the message has ended
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[0];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[1];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[2];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[3];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[4];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[5];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[6];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[7];
+
     // print image content, with hidden message
-    //int hidden_bits = 0;
+    int hidden_bits = 0;
 
     for (int i = 0; i < iheader->height; i++){
         for (int j = 0; j < iheader->width; j++){
@@ -150,12 +190,12 @@ void _bmp_write_with_secret(BMP *image, const char *message){
             unsigned char pixel_colors[3] = {pixel.red, pixel.green, pixel.blue};
 
             for (int k = 0; k < 3; k++){
-                /*if (hidden_bits < serialized_message_len)
+                if (hidden_bits < serialized_message_len)
                     set_color_lsb(&pixel_colors[k], serialized_message[hidden_bits]);
                 else
-                    set_color_lsb(&pixel_colors[k], 0);*/
+                    set_color_lsb(&pixel_colors[k], 0);
                 fputc(pixel_colors[k], img_file);
-                //hidden_bits++;
+                hidden_bits++;
             }
         }
     }

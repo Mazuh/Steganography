@@ -25,7 +25,7 @@ char *ppm_decode(const char *filename){
 
     char *message = malloc(1);
 
-    for (int i = 0; i < 500; i += 8){
+    for (int i = 0;; i += 8){
         found_char = (
             image->found_lsb[i] << 7
             | image->found_lsb[i+1] << 6
@@ -127,15 +127,15 @@ void _ppm_write_with_secret(PPM *image, const char *message){
         hidden_bytes++;
     }
 
-    // serialize ESC character, saying that the message has ended
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-    serialized_message[serialized_message_len++] = (unsigned char) 0;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
-    serialized_message[serialized_message_len++] = (unsigned char) 1;
+    // serialize a character saying that the message has ended
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[0];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[1];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[2];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[3];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[4];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[5];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[6];
+    serialized_message[serialized_message_len++] = SERIALIZED_END_OF_SECRET[7];
 
     // print image content, with hidden message
     int hidden_bits = 0;
