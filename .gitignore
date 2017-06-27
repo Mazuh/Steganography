@@ -1,7 +1,7 @@
 # CUSTOM BEGIN
-encoded_images/*.bmp
-encoded_images/*.ppm
-decoded_secrets/*.txt
+*/encoded_images/*.bmp
+*/encoded_images/*.ppm
+*/decoded_secrets/*.txt
 # CUSTOM END
 
 # Prerequisites
