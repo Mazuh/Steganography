@@ -1,0 +1,1 @@
+Here will be secrets retrieved by this Steganography program.

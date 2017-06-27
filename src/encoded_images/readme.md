@@ -1,0 +1,1 @@
+Images created by this Steganography program that have secrets inside.
