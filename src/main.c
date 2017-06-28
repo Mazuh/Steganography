@@ -95,8 +95,9 @@ int main(int args_len, char *args[]){
             ppm_encode(host_filename, _dcontent_from_file(secret_filename), resulting_filename);
 
         } else if (host_filename[host_filename_len-1] == 'p' && host_filename[host_filename_len-2] == 'm' && host_filename[host_filename_len-3] == 'b'){
-            //printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
-            //ppm_encode(host_filename, _dcontent_from_file(secret_filename), resulting_filename);    
+            printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
+            bmp_encode(host_filename, _dcontent_from_file(secret_filename), resulting_filename);
+
         } else {
             printf("Unsupported file type: should be .ppm or .bmp.\n");
             return 1;
@@ -125,11 +126,25 @@ int main(int args_len, char *args[]){
                 }
             } else{
                 printf("No message could be found.\n");
+                return 1;
             }
 
         } else if (host_filename[host_filename_len-1] == 'p' && host_filename[host_filename_len-2] == 'm' && host_filename[host_filename_len-3] == 'b'){
-            //printf("\n>>> BMP: TRYING TO CREATE AN IMAGE WITH SECRET...\n");
-            //ppm_encode(host_filename, _dcontent_from_file(secret_filename), resulting_filename);    
+            printf("\n>>> BMP: READING SECRET INSIDE THE CREATED IMAGE...\n");
+
+            char *message = bmp_decode(host_filename);
+
+            if (strlen(message)){
+                if (_dcontent_to_file(secret_filename, message)){
+                    printf("Discovered message file: %s\n", secret_filename);
+                } else{
+                    printf("Failed to write at %s file. Here's the message then:\n\n%s\n", secret_filename, message);
+                }
+            } else{
+                printf("No message could be found.\n");
+                return 1;
+            }
+
         } else {
             printf("Unsupported file type: should be .ppm or .bmp.\n");
             return 1;

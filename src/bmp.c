@@ -15,9 +15,9 @@ const char BMP_DEFAULT_ENCODED_FILENAME[] = "./encoded_images/suspicious_bitmap.
 #define SIZE_INT 4
 #define SIZE_SHORT 2
 
-void bmp_encode(const char *filename, const char *message){    
+void bmp_encode(const char *filename, const char *message, const char *resulting_filename){    
     BMP *image = _bmp_read_from_file(filename);
-    _bmp_write_with_secret(image, message);
+    _bmp_write_with_secret(image, message, resulting_filename);
     free(image);
 }
 
@@ -129,9 +129,9 @@ BMP *_bmp_read_from_file(const char *filename){
 }
 
 
-void _bmp_write_with_secret(BMP *image, const char *message){
+void _bmp_write_with_secret(BMP *image, const char *message, const char *resulting_filename){
     // hello!
-    FILE *img_file = fopen(BMP_DEFAULT_ENCODED_FILENAME, "wb");
+    FILE *img_file = fopen(resulting_filename, "wb");
 
     // write file header
     FileHeaderBMP *fheader = image->file_header;
@@ -203,8 +203,6 @@ void _bmp_write_with_secret(BMP *image, const char *message){
     // bye :c
     fclose(img_file);
 
-    printf("Output file: ");
-    printf(BMP_DEFAULT_ENCODED_FILENAME);
-    printf("\n");
+    printf("Output file: %s\n", resulting_filename);
 
 }

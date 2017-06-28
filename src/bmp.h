@@ -54,7 +54,7 @@ typedef struct BMP_struct{
 /**
  * @brief Gets a bmp image file and writes a message in it.
  */
-void bmp_encode(const char *filename, const char *message);
+void ppm_encode(const char *filename, const char *message, const char *resulting_filename);
 
 /**
  * @brief Gets a bmp image file with a secret and discover its message.
@@ -69,6 +69,6 @@ BMP *_bmp_read_from_file(const char *filename);
 /**
  * @brief (Private) Persists the image and also writes a secret message.
  */
-void _bmp_write_with_secret(BMP *image, const char *message);
+void _bmp_write_with_secret(BMP *image, const char *message, const char *resulting_filename);
 
 #endif
