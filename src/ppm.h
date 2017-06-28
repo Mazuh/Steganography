@@ -30,7 +30,7 @@ typedef struct PPM_struct{
 /**
  * @brief Gets a ppm image file and writes a message in it.
  */
-void ppm_encode(const char *filename, const char *message);
+void ppm_encode(const char *filename, const char *message, const char *resulting_filename);
 
 /**
  * @brief Gets a ppm image file with a secret and discover its message.
@@ -40,11 +40,11 @@ char *ppm_decode(const char *filename);
 /**
  * @brief (Private) Reads the original image file.
  */
-PPM *_ppm_read_from_file(const char *filename, int secret);
+PPM *_ppm_read_from_file(const char *filename);
 
 /**
  * @brief (Private) Persists the image and also writes a secret message.
  */
-void _ppm_write_with_secret(PPM *image, const char *message);
+void _ppm_write_with_secret(PPM *image, const char *message, const char *resulting_filename);
 
 #endif

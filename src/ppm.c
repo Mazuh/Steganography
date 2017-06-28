@@ -12,13 +12,13 @@
 const char PPM_DEFAULT_ASSET_FILENAME[] = "./default_assets/imd.ppm";
 const char PPM_DEFAULT_ENCODED_FILENAME[] = "./encoded_images/suspicious_portable_pixmap.ppm";
 
-void ppm_encode(const char *filename, const char *message){
-    PPM *image = _ppm_read_from_file(filename, 0);
-    _ppm_write_with_secret(image, message);
+void ppm_encode(const char *filename, const char *message, const char *resulting_filename){
+    PPM *image = _ppm_read_from_file(filename);
+    _ppm_write_with_secret(image, message, resulting_filename);
 }
 
 char *ppm_decode(const char *filename){
-    PPM *image = _ppm_read_from_file(filename, 1);
+    PPM *image = _ppm_read_from_file(filename);
 
     int message_len = 0;
     unsigned char found_char;
@@ -50,7 +50,7 @@ char *ppm_decode(const char *filename){
     return message;
 }
 
-PPM* _ppm_read_from_file(const char *filename, int secret){
+PPM* _ppm_read_from_file(const char *filename){
 
     // open it!
     PPM *image = malloc(sizeof(PPM));
@@ -87,12 +87,11 @@ PPM* _ppm_read_from_file(const char *filename, int secret){
             pixel.green = (unsigned char) fgetc(img_file);
             pixel.blue = (unsigned char) fgetc(img_file);
             image->pixel_map[i][j] = pixel;
-            if (found_lsb_len < 498 && secret){
-                image->found_lsb = realloc(image->found_lsb, found_lsb_len+3);
-                image->found_lsb[found_lsb_len++] = color_lsb(&pixel.red);
-                image->found_lsb[found_lsb_len++] = color_lsb(&pixel.green);
-                image->found_lsb[found_lsb_len++] = color_lsb(&pixel.blue);
-            }
+            
+            image->found_lsb = realloc(image->found_lsb, found_lsb_len+3);
+            image->found_lsb[found_lsb_len++] = color_lsb(&pixel.red);
+            image->found_lsb[found_lsb_len++] = color_lsb(&pixel.green);
+            image->found_lsb[found_lsb_len++] = color_lsb(&pixel.blue);
         }
     }
 
@@ -103,10 +102,10 @@ PPM* _ppm_read_from_file(const char *filename, int secret){
     return image;
 }
 
-void _ppm_write_with_secret(PPM *image, const char *message){
+void _ppm_write_with_secret(PPM *image, const char *message, const char *resulting_filename){
 
     // hello!
-    FILE *img_file = fopen(PPM_DEFAULT_ENCODED_FILENAME, "wb");
+    FILE *img_file = fopen(resulting_filename, "wb");
 
     // print header
     fputs(PPM_TYPE_BIN, img_file);
@@ -161,8 +160,6 @@ void _ppm_write_with_secret(PPM *image, const char *message){
     // bye :c
     fclose(img_file);
 
-    printf("Output file: ");
-    printf(PPM_DEFAULT_ENCODED_FILENAME);
-    printf("\n");
+    printf("Output file: %s\n", resulting_filename);
 
 }

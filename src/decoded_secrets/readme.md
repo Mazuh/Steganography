@@ -1,1 +1,1 @@
-Here will be secrets retrieved by this Steganography program.
+Here will be secrets retrieved by my test scripts.
